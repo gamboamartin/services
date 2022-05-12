@@ -7,12 +7,13 @@ use Throwable;
 
 class services{
     private errores $error;
+    public stdClass $data_conexion;
     public function __construct(){
         $this->error = new errores();
     }
 
     /**
-     * DOC ERROR UNIT
+     * TODO
      * Crea un link de mysql con mysqli
      * @param string $host ruta de servidor
      * @param string $nombre_base_datos Nombre de la base de datos
@@ -107,6 +108,8 @@ class services{
         $data->user = $user;
         $data->pass = $pass;
         $data->nombre_base_datos = $nombre_base_datos;
+
+        $this->data_conexion = $data;
 
         return $data;
     }
