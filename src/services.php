@@ -9,6 +9,7 @@ class services{
     private errores $error;
     public stdClass $data_conexion;
     public stdClass $name_files;
+    public bool $corriendo;
     public function __construct(string $path){
         $this->error = new errores();
         $data_service = $this->verifica_servicio(path: $path);
@@ -17,6 +18,7 @@ class services{
             print_r($error);
             die('Error');
         }
+        $this->corriendo = $data_service->corriendo;
 
         if($data_service->corriendo){
             echo 'El servicio esta corriendo '.$path;
@@ -99,32 +101,42 @@ class services{
     }
 
     /**
+     * TODO
      * Genera los datos necesarios para la conexion a una bd de mysql, si remote, ajusta los datos de empresa
      * remote conexion
      * @param array $empresa arreglo de empresa
      * @param string $tipo tipo de conexion si remota o local
-     * @return stdClass obj->host, obj->user, obj->pass, obj->nombre_base_datos
+     * @return stdClass|array obj->host, obj->user, obj->pass, obj->nombre_base_datos
      */
-    private function data_conecta(array $empresa, string $tipo): stdClass
+    private function data_conecta(array $empresa, string $tipo): stdClass|array
     {
-        $key = '';
-        $tipo = trim($tipo);
-        if($tipo === 'remote'){
-            $key = $tipo.'_';
-        }
-        $host = $empresa[$key."host"];
-        $user = $empresa[$key."user"];
-        $pass = $empresa[$key."pass"];
-        $nombre_base_datos = $empresa[$key."nombre_base_datos"];
 
         $data = new stdClass();
-        $data->host = $host;
-        $data->user = $user;
-        $data->pass = $pass;
-        $data->nombre_base_datos = $nombre_base_datos;
+        $keys_base = array('host','user','pass','nombre_base_datos');
+        foreach($keys_base as $key_base){
+            $data = $this->data_empresa(data: $data,empresa: $empresa,key_base: $key_base,tipo: $tipo);
+            if(errores::$error){
+                return $this->error->error(mensaje: 'Error al generar datos', data:$data);
+            }
+        }
 
         $this->data_conexion = $data;
 
+        return $data;
+    }
+
+    private function data_empresa(stdClass $data, array $empresa, string $key_base, string $tipo): array|stdClass
+    {
+        $key_empresa = $this->key_empresa_base(key_base: $key_base,tipo: $tipo);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener key', data:$key_empresa);
+        }
+
+        if(!isset($empresa[$key_empresa])){
+            return $this->error->error(mensaje: 'Error no existe key ['.$key_empresa.']', data:$empresa);
+        }
+
+        $data->$key_base = $empresa[$key_empresa];
         return $data;
     }
 
@@ -217,6 +229,25 @@ class services{
         $data->genera_file_lock = $genera_file_lock;
         $data->genera_file_info = $genera_file_info;
         return $data;
+    }
+
+    private function key_empresa(string $tipo): string
+    {
+        $key = '';
+        $tipo = trim($tipo);
+        if($tipo === 'remote'){
+            $key = $tipo.'_';
+        }
+        return $key;
+    }
+
+    private function key_empresa_base(string $key_base, string $tipo): array|string
+    {
+        $key = $this->key_empresa(tipo: $tipo);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener key', data:$key);
+        }
+        return $key.$key_base;
     }
 
     /**

@@ -50,6 +50,41 @@ class servicesTest extends test {
 
     }
 
+    public function test_data_conecta(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv = new liberator($srv);
+
+
+        $tipo = '';
+        $empresa = array();
+        $empresa['host'] = 'a';
+        $resultado = $srv->data_conecta($empresa, $tipo);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al generar datos',$resultado['mensaje']);
+
+        errores::$error = false;
+
+
+        $tipo = '';
+        $empresa = array();
+        $empresa['host'] = 'a';
+        $empresa['user'] = 'b';
+        $empresa['pass'] = 'b';
+        $empresa['nombre_base_datos'] = 'b';
+        $resultado = $srv->data_conecta($empresa, $tipo);
+        $this->assertIsObject( $resultado);
+        $this->assertNotTrue(errores::$error);
+        $this->assertEquals('a', $resultado->host);
+
+
+        $srv->finaliza_servicio();
+        errores::$error = false;
+    }
+
     public function test_genera_file_lock(): void
     {
         errores::$error = false;
