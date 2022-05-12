@@ -17,11 +17,12 @@ class servicesTest extends test {
         $this->errores = new errores();
     }
 
+
     public function test_conecta_mysqli(): void
     {
         errores::$error = false;
 
-        $srv = new services();
+        $srv = new services(__FILE__);
 
         $srv = new liberator($srv);
 
@@ -45,13 +46,15 @@ class servicesTest extends test {
         $this->assertStringContainsStringIgnoringCase('Error al conectarse',$resultado['mensaje']);
         errores::$error = false;
 
+        $srv->finaliza_servicio();
+
     }
 
     public function test_genera_file_lock(): void
     {
         errores::$error = false;
 
-        $srv = new services();
+        $srv = new services(__FILE__);
 
         $srv = new liberator($srv);
 
@@ -84,13 +87,39 @@ class servicesTest extends test {
             unlink($path);
         }
         errores::$error = false;
+        $srv->finaliza_servicio();
+    }
+
+    public function test_name_file_lock(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(path: __FILE__);
+
+        $srv = new liberator($srv);
+
+        $file_base = '';
+        $resultado = $srv->name_file_lock($file_base);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error file_base esta vacio',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $file_base = 'z';
+        $resultado = $srv->name_file_lock($file_base);
+        $this->assertIsString( $resultado);
+        $this->assertNotTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('z', $resultado);
+        $srv->finaliza_servicio();
+        errores::$error = false;
     }
 
     public function test_valida_conexion(): void
     {
         errores::$error = false;
 
-        $srv = new services();
+        $srv = new services(__FILE__);
 
         $srv = new liberator($srv);
 
@@ -115,6 +144,7 @@ class servicesTest extends test {
         $this->assertNotTrue(errores::$error);
         $this->assertTrue($resultado);
         errores::$error = false;
+        $srv->finaliza_servicio();
     }
 
     public function test_valida_path(): void
@@ -124,7 +154,7 @@ class servicesTest extends test {
             unlink('test.file');
         }
 
-        $srv = new services();
+        $srv = new services(__FILE__);
         $srv = new liberator($srv);
 
         $path = '';
@@ -152,6 +182,7 @@ class servicesTest extends test {
 
         unlink($path);
         errores::$error = false;
+        $srv->finaliza_servicio();
     }
 
 

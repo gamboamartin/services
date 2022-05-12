@@ -8,9 +8,23 @@ use Throwable;
 class services{
     private errores $error;
     public stdClass $data_conexion;
-    public function __construct(){
+    public stdClass $name_files;
+    public function __construct(string $path){
         $this->error = new errores();
+        $data_service = $this->verifica_servicio(path: $path);
+        if(errores::$error){
+            $error = $this->error->error('Error al verificar servicio', $data_service);
+            print_r($error);
+            die('Error');
+        }
+
+        if($data_service->corriendo){
+            echo 'El servicio esta corriendo '.$path;
+            exit;
+        }
     }
+
+
 
     /**
      * TODO
@@ -139,6 +153,13 @@ class services{
         return $servicio_corriendo;
     }
 
+    public function finaliza_servicio(): stdClass
+    {
+        unlink($this->name_files->path_info);
+        unlink($this->name_files->path_lock);
+        return $this->name_files;
+    }
+
     /**
      * ERROR UNIT DOC
      * Se genera archivo lock en la ruta de path
@@ -199,13 +220,17 @@ class services{
     }
 
     /**
-     * DOC ERROR
+     * DOC ERROR UNIT
      * Genera el nombre de file para info de un servicio para poder identificar a que hora se ejecuto
-     * @param string $file_base
-     * @return string
+     * @param string $file_base Nombre del path del servicio en ejecucion
+     * @return string|array
      */
-    private function name_file_lock(string $file_base): string
+    private function name_file_lock(string $file_base): string|array
     {
+        $file_base = trim($file_base);
+        if($file_base === ''){
+            return $this->error->error(mensaje: 'Error file_base esta vacio', data: $file_base);
+        }
         return $file_base.'.'.date('Y-m-d.H:i:s');
     }
 
@@ -219,6 +244,9 @@ class services{
         $data = new stdClass();
         $data->path_lock = $path_lock;
         $data->path_info = $path_info;
+
+        $this->name_files = $data;
+
         return $data;
     }
 
