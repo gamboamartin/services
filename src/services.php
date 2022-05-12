@@ -49,21 +49,66 @@ class services{
         }
     }
 
-    public function conecta_remoto_mysqli(array $empresa): bool|array|mysqli
+    public function conecta_local_mysqli(array $empresa): bool|array|mysqli
     {
-        $host_r = $empresa['remote_host'];
-        $user_r = $empresa['remote_user'];
-        $pass_r = $empresa['remote_pass'];
-        $nombre_base_datos_r = $empresa['remote_nombre_base_datos'];
 
-
-        $link_remoto = $this->conecta_mysqli(host: $host_r,
-            nombre_base_datos:  $nombre_base_datos_r, pass: $pass_r,user:  $user_r);
+        $data = $this->data_conecta(empresa: $empresa, tipo: '');
         if(errores::$error){
-            return $this->error->error('Error al conectar remoto', $link_remoto);
+            return $this->error->error('Error al ajustar datos', $data);
         }
 
-        return $link_remoto;
+        $link = $this->conecta_mysqli(host: $data->host, nombre_base_datos:  $data->nombre_base_datos,
+            pass: $data->pass,user:  $data->user);
+        if(errores::$error){
+            return $this->error->error('Error al conectar', $link);
+        }
+
+        return $link;
+    }
+
+    public function conecta_remoto_mysqli(array $empresa): bool|array|mysqli
+    {
+
+        $data = $this->data_conecta(empresa: $empresa, tipo: 'remote');
+        if(errores::$error){
+            return $this->error->error('Error al ajustar datos', $data);
+        }
+
+        $link = $this->conecta_mysqli(host: $data->host, nombre_base_datos:  $data->nombre_base_datos,
+            pass: $data->pass,user:  $data->user);
+        if(errores::$error){
+            return $this->error->error('Error al conectar remoto', $link);
+        }
+
+        return $link;
+    }
+
+    /**
+     * Genera los datos necesarios para la conexion a una bd de mysql, si remote, ajusta los datos de empresa
+     * remote conexion
+     * @param array $empresa arreglo de empresa
+     * @param string $tipo tipo de conexion si remota o local
+     * @return stdClass obj->host, obj->user, obj->pass, obj->nombre_base_datos
+     */
+    private function data_conecta(array $empresa, string $tipo): stdClass
+    {
+        $key = '';
+        $tipo = trim($tipo);
+        if($tipo === 'remote'){
+            $key = $tipo.'_';
+        }
+        $host = $empresa[$key."host"];
+        $user = $empresa[$key."user"];
+        $pass = $empresa[$key."pass"];
+        $nombre_base_datos = $empresa[$key."nombre_base_datos"];
+
+        $data = new stdClass();
+        $data->host = $host;
+        $data->user = $user;
+        $data->pass = $pass;
+        $data->nombre_base_datos = $nombre_base_datos;
+
+        return $data;
     }
 
 
