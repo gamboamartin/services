@@ -20,7 +20,7 @@ class services{
      * @param string $user user mysql
      * @return bool|array|mysqli
      */
-    public function conecta_mysqli(string $host, string $nombre_base_datos, string $pass,
+    private function conecta_mysqli(string $host, string $nombre_base_datos, string $pass,
                                    string $user): bool|array|mysqli
     {
         $host = trim($host);
@@ -48,6 +48,24 @@ class services{
             return $this->error->error(mensaje: 'Error al conectarse',data:  $e);
         }
     }
+
+    public function conecta_remoto_mysqli(array $empresa): bool|array|mysqli
+    {
+        $host_r = $empresa['remote_host'];
+        $user_r = $empresa['remote_user'];
+        $pass_r = $empresa['remote_pass'];
+        $nombre_base_datos_r = $empresa['remote_nombre_base_datos'];
+
+
+        $link_remoto = $this->conecta_mysqli(host: $host_r,
+            nombre_base_datos:  $nombre_base_datos_r, pass: $pass_r,user:  $user_r);
+        if(errores::$error){
+            return $this->error->error('Error al conectar remoto', $link_remoto);
+        }
+
+        return $link_remoto;
+    }
+
 
     /**
      * DOC ERROR
@@ -157,7 +175,7 @@ class services{
     }
 
     /**
-     *  DOC ERROR
+     *  TODO
      *  Verifica los datos necesarios para conectarse a una base de datos mysql
      * @param string $host Ruta servidor
      * @param string $nombre_base_datos nombre de base de datos

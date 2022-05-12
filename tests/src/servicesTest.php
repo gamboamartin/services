@@ -23,7 +23,7 @@ class servicesTest extends test {
 
         $srv = new services();
 
-        //$srv = new liberator($srv);
+        $srv = new liberator($srv);
 
         $host = '';
         $nombre_base_datos_r = '';
@@ -83,6 +83,37 @@ class servicesTest extends test {
         if(file_exists($path)){
             unlink($path);
         }
+        errores::$error = false;
+    }
+
+    public function test_valida_conexion(): void
+    {
+        errores::$error = false;
+
+        $srv = new services();
+
+        $srv = new liberator($srv);
+
+        $host = '';
+        $nombre_base_datos = '';
+        $pass = '';
+        $user = '';
+        $resultado = $srv->valida_conexion($host, $nombre_base_datos, $pass, $user);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error el host esta vacio',$resultado['mensaje']);
+
+        errores::$error = false;
+
+
+        $host = 'a';
+        $nombre_base_datos = 'b';
+        $pass = 'c';
+        $user = 'd';
+        $resultado = $srv->valida_conexion($host, $nombre_base_datos, $pass, $user);
+        $this->assertIsBool( $resultado);
+        $this->assertNotTrue(errores::$error);
+        $this->assertTrue($resultado);
         errores::$error = false;
     }
 
