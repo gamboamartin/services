@@ -1,5 +1,6 @@
 <?php
 namespace gamboamartin\services;
+use gamboamartin\calculo\calculo;
 use gamboamartin\errores\errores;
 use mysqli;
 use stdClass;
@@ -279,6 +280,27 @@ class services{
         $this->name_files = $data;
 
         return $data;
+    }
+
+    /**
+     * Funcion para obtener la fecha de hoy menos n_dias
+     * @param int $n_dias Numero de dias a restar a la fecha
+     * @param string $tipo_val utiliza los patterns de las siguientes formas
+     *          fecha=yyyy-mm-dd
+     *          fecha_hora_min_sec_esp = yyyy-mm-dd hh-mm-ss
+     *          fecha_hora_min_sec_t = yyyy-mm-ddThh-mm-ss
+     * @return array|string
+     */
+    public function get_fecha_filtro_service(int $n_dias, string $tipo_val): array|string
+    {
+        $calculo = new calculo();
+        $hoy = date($calculo->formats_fecha[$tipo_val]);
+
+        $fecha = $calculo->obten_fecha_resta(fecha: $hoy,n_dias: $n_dias,tipo_val: $tipo_val);
+        if(errores::$error){
+            return $this->error->error('Error al obtener fecha', $fecha);
+        }
+        return $fecha;
     }
 
     /**
