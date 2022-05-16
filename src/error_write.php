@@ -1,5 +1,5 @@
 <?php
-namespace gamboamartin\error_write;
+namespace gamboamartin\services\error_write;
 
 
 use JetBrains\PhpStorm\NoReturn;
