@@ -5,7 +5,7 @@ use gamboamartin\errores\errores;
 use gamboamartin\services\services;
 use gamboamartin\test\liberator;
 use gamboamartin\test\test;
-
+use stdClass;
 
 
 class servicesTest extends test {
@@ -49,6 +49,8 @@ class servicesTest extends test {
         $srv->finaliza_servicio();
 
     }
+
+
 
     public function test_data_conecta(): void
     {

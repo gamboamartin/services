@@ -3,6 +3,7 @@ namespace gamboamartin\services;
 use gamboamartin\calculo\calculo;
 use gamboamartin\errores\errores;
 use mysqli;
+use PDO;
 use stdClass;
 use Throwable;
 
@@ -107,6 +108,32 @@ class services{
 
         return $link;
     }
+
+    /**
+     * Conexion a base de datos visa mysql con pdo
+     * @param stdClass $conf_database Debe tener db_host, db_name, db_user, db_password, set_name, sql_mode, time_out
+     * @return PDO|array
+     */
+    public function conecta_pdo(stdClass $conf_database): PDO|array
+    {
+        try {
+            $link = new PDO("mysql:host=$conf_database->db_host;dbname=$conf_database->db_name",
+                $conf_database->db_user, $conf_database->db_password);
+
+            $link->query("SET NAMES '$conf_database->set_name'");
+            $sql = "SET sql_mode = '$conf_database->sql_mode';";
+            $link->query($sql);
+            $sql = "SET innodb_lock_wait_timeout=$conf_database->time_out;";
+            $link->query($sql);
+
+        } catch (Throwable $e) {
+            return $this->error->error(mensaje: 'Error al conectar', data: $e);
+        }
+
+        return $link;
+    }
+
+
 
     public function conecta_remoto_mysqli(array $empresa): bool|array|mysqli
     {
