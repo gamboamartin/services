@@ -1,5 +1,6 @@
 <?php
 namespace gamboamartin\services;
+use config\database;
 use gamboamartin\calculo\calculo;
 use gamboamartin\errores\errores;
 use mysqli;
@@ -111,10 +112,10 @@ class services{
 
     /**
      * Conexion a base de datos visa mysql con pdo
-     * @param stdClass $conf_database Debe tener db_host, db_name, db_user, db_password, set_name, sql_mode, time_out
+     * @param stdClass|database $conf_database Debe tener db_host, db_name, db_user, db_password, set_name, sql_mode, time_out
      * @return PDO|array
      */
-    public function conecta_pdo(stdClass $conf_database): PDO|array
+    public function conecta_pdo(stdClass|database $conf_database): PDO|array
     {
         try {
             $link = new PDO("mysql:host=$conf_database->db_host;dbname=$conf_database->db_name",
@@ -400,8 +401,9 @@ class services{
     }
 
     /**
-     * FULL
+     *
      * Se verifica si el path esta vacio, o el archivo existe, el archivo no debe existir para retornar true
+     * @version v0.2.0 
      * @param string $path ruta a validar
      * @return bool|array bool = true si el path no esta vacio array si hay error o si existe el archivo
      */
