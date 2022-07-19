@@ -37,7 +37,7 @@ class services{
         }
     }
 
-    public function compara_estructura(array $columnas_remotas, array $local): array|stdClass
+    private function compara_estructura(array $columnas_remotas, array $local): array|stdClass
     {
         $val =$this->init_val_tabla();
         if(errores::$error){
@@ -542,7 +542,7 @@ class services{
         return $fecha;
     }
 
-    public function valida_columna(array $column_local, string $key, stdClass $val): bool|array
+    private function valida_columna(array $column_local, string $key, stdClass $val): bool|array
     {
         if(!$val->$key){
             return  (new errores())->error(mensaje: 'Error no existe columna en remoto', data: $column_local);
@@ -658,6 +658,22 @@ class services{
         }
 
         return true;
+    }
+
+    public function verifica_estructura_por_columna(array $column_local, array $columnas_remotas): array|stdClass
+    {
+        $val = $this->compara_estructura(columnas_remotas: $columnas_remotas, local: $column_local);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error comparar datos', data: $val);
+        }
+
+        foreach ($val as $columna_estructura){
+            $valida = $this->valida_columna(column_local: $column_local, key:$columna_estructura,val:  $val);
+            if(errores::$error){
+                return (new errores())->error(mensaje:'Error comparar datos '.$columna_estructura,data: $valida);
+            }
+        }
+        return $val;
     }
 
     /**
