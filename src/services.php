@@ -373,15 +373,19 @@ class services{
         return $data;
     }
 
+    /**
+     * Inicializa en falso los elementos a validar de una tabla de dos bases de datos
+     * @return stdClass existe, tipo_dato, null, key, default, extra
+     */
     public function init_val_tabla(): stdClass
     {
         $data = new stdClass();
-        $data->existe_columna_en_remoto = false;
-        $data->tipo_dato_en_remoto_valido = false;
-        $data->null_en_remoto_valido = false;
-        $data->key_en_remoto_valido = false;
-        $data->default_en_remoto_valido = false;
-        $data->extra_en_remoto_valido = false;
+        $data->existe = false;
+        $data->tipo_dato = false;
+        $data->null = false;
+        $data->key = false;
+        $data->default = false;
+        $data->extra = false;
         return $data;
 
 
@@ -559,10 +563,11 @@ class services{
     }
 
     /**
-     * ERROR DOC
+     *
      * Verifica si los paths no estan vacios y que no existe el archivo de cada path
+     * @version 0.9.0
      * @param string $path_info Path info con fecha
-     * @param string $path_lock Path para bloquear servcio
+     * @param string $path_lock Path para bloquear servicio
      * @return bool|array bool true si no hay errores
      */
     private function valida_paths(string $path_info, string $path_lock): bool|array

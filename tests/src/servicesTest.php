@@ -412,6 +412,49 @@ class servicesTest extends test {
         $srv->finaliza_servicio();
     }
 
+    public function test_valida_paths(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        $srv = new liberator($srv);
+
+        $path_info= '';
+        $path_lock= '';
+
+
+        $resultado = $srv->valida_paths($path_info,$path_lock);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar $path_info',$resultado['mensaje']);
+
+        errores::$error = false;
+
+
+        $path_info= 'a';
+        $path_lock= '';
+
+
+        $resultado = $srv->valida_paths($path_info,$path_lock);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar $path_lock',$resultado['mensaje']);
+
+        errores::$error = false;
+
+
+        $path_info= 'a';
+        $path_lock= 'b';
+
+
+        $resultado = $srv->valida_paths($path_info,$path_lock);
+        $this->assertIsBool( $resultado);
+        $this->assertNotTrue(errores::$error);
+        errores::$error = false;
+    }
+
 
 
 }
