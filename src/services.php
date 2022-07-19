@@ -1,5 +1,7 @@
 <?php
 namespace gamboamartin\services;
+use base\orm\columnas;
+use base\orm\modelo;
 use config\database;
 use gamboamartin\calculo\calculo;
 use gamboamartin\errores\errores;
@@ -187,6 +189,35 @@ class services{
         $this->data_conexion = $data;
 
         return $data;
+    }
+
+    public function data_conexion_local(string $name_model): array|stdClass
+    {
+        $db = new database();
+
+        $link_local = $this->conecta_pdo(conf_database: $db);
+
+
+        $modelo_local = (new modelo(link: $link_local, tabla: ''))->genera_modelo(modelo: $name_model);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al generar modelo',data:  $modelo_local);
+        }
+
+        $columnas_local = (new columnas())->columnas_bd_native(modelo:$modelo_local, tabla_bd: $modelo_local->tabla);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al obtener columnas local', data: $columnas_local);
+
+        }
+        $n_columnas_local = count($columnas_local);
+
+        $data = new stdClass();
+        $data->link = $link_local;
+        $data->modelo = $modelo_local;
+        $data->columnas = $columnas_local;
+        $data->n_columnas = $n_columnas_local;
+
+        return $data;
+
     }
 
     private function data_empresa(stdClass $data, array $empresa, string $key_base, string $tipo): array|stdClass
