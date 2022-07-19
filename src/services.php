@@ -780,10 +780,11 @@ class services{
 
         $valida = $this->verifica_numero_columnas(data_local: $data_local, data_remoto: $data_remoto);
         if(errores::$error){
-            return (new errores())->error(mensaje: 'Error comparar datos '.$valida,data:  $valida);
+            return (new errores())->error(mensaje: 'Error comparar datos '.$tabla,data:  $valida);
         }
 
-        $valida = $this->verifica_columnas(columnas_local: $data_local->columnas,columnas_remotas:  $data_remoto->columnas);
+        $valida = $this->verifica_columnas(columnas_local: $data_local->columnas,
+            columnas_remotas:  $data_remoto->columnas);
         if(errores::$error){
             return (new errores())->error('Error comparar datos '.$valida, $valida);
         }
