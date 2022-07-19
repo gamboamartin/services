@@ -40,6 +40,26 @@ class services{
     }
 
     /**
+     * @throws JsonException
+     */
+    public function alta_row(modelo $modelo, array $registro): bool|array
+    {
+        $insertado = false;
+        $existe_remoto = $modelo->existe_by_id(registro_id: $registro['id']);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al obtener pais remoto', data: $existe_remoto);
+        }
+        if(!$existe_remoto){
+            $registro = $this->inserta_row_limpio(modelo: $modelo, registro: $registro);
+            if(errores::$error){
+                return (new errores())->error(mensaje: 'Error al insertar registro',data:  $registro);
+            }
+            $insertado = true;
+        }
+        return $insertado;
+    }
+
+    /**
      * @param array $columnas_remotas Conjunto de columnas remotas a comparar
      * @param array $local columna de registro local
      * @return array|stdClass
@@ -520,7 +540,7 @@ class services{
     /**
      * @throws JsonException
      */
-    public function inserta_row_limpio(modelo $modelo, array $registro): array
+    private function inserta_row_limpio(modelo $modelo, array $registro): array
     {
         $registro = $this->limpia_row_alta(registro: $registro);
         if(errores::$error){
