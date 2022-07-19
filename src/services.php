@@ -1,7 +1,6 @@
 <?php
 namespace gamboamartin\services;
 use base\orm\columnas;
-use base\orm\modelo;
 use base\orm\modelo_base;
 use config\database;
 use gamboamartin\calculo\calculo;
@@ -544,6 +543,9 @@ class services{
 
     private function valida_columna(array $column_local, string $key, stdClass $val): bool|array
     {
+        if(is_numeric($key)){
+            return  (new errores())->error(mensaje: 'Error el key no puede ser un numero', data: $key);
+        }
         if(!$val->$key){
             return  (new errores())->error(mensaje: 'Error no existe columna en remoto', data: $column_local);
         }
@@ -679,7 +681,11 @@ class services{
             return (new errores())->error(mensaje: 'Error comparar datos', data: $val);
         }
 
-        foreach ($val as $columna_estructura){
+        foreach ($val as $columna_estructura=>$value){
+            if(is_numeric($columna_estructura)){
+                return  (new errores())->error(mensaje: 'Error $columna_estructura no puede ser un numero',
+                    data: $columna_estructura);
+            }
             $valida = $this->valida_columna(column_local: $column_local, key:$columna_estructura,val:  $val);
             if(errores::$error){
                 return (new errores())->error(mensaje:'Error comparar datos '.$columna_estructura,data: $valida);
