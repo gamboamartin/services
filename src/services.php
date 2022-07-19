@@ -37,6 +37,11 @@ class services{
         }
     }
 
+    /**
+     * @param array $columnas_remotas Conjunto de columnas remotas a comparar
+     * @param array $local
+     * @return array|stdClass
+     */
     private function compara_estructura(array $columnas_remotas, array $local): array|stdClass
     {
         $val =$this->init_val_tabla();
@@ -54,7 +59,7 @@ class services{
 
     /**
      * Compara las estructura de una tabla vs otra
-     * @param array $columnas_remotas
+     * @param array $columnas_remotas Conjunto de columnas remotas a comparar
      * @param array $local
      * @param stdClass $val
      * @return array|stdClass
@@ -702,6 +707,11 @@ class services{
         return true;
     }
 
+    /**
+     * @param array $columnas_local
+     * @param array $columnas_remotas Conjunto de columnas remotas a comparar
+     * @return array|stdClass
+     */
     private function verifica_columnas(array $columnas_local, array $columnas_remotas ): array|stdClass
     {
         $valida = new stdClass();
@@ -714,6 +724,11 @@ class services{
         return $valida;
     }
 
+    /**
+     * @param array $column_local
+     * @param array $columnas_remotas Conjunto de columnas remotas a comparar
+     * @return array|stdClass
+     */
     private function verifica_estructura_por_columna(array $column_local, array $columnas_remotas): array|stdClass
     {
         $val = $this->compara_estructura(columnas_remotas: $columnas_remotas, local: $column_local);
