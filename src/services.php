@@ -37,7 +37,22 @@ class services{
         }
     }
 
-    public function compara_estructura_tabla(array $local, array $remoto,stdClass $val): stdClass
+    public function compara_estructura_synk(array $columnas_remotas, array $local, stdClass $val): array|stdClass
+    {
+        foreach ($columnas_remotas as $column_remoto){
+            if($column_remoto['Field'] === $local['Field']){
+
+                $val = $this->compara_estructura_tabla(local:$column_remoto,remoto:  $local,val:  $val);
+                if(errores::$error){
+                    return (new errores())->error('Error comparar datos', $val);
+                }
+                break;
+            }
+        }
+        return $val;
+    }
+
+    private function compara_estructura_tabla(array $local, array $remoto,stdClass $val): stdClass
     {
         $val->existe = true;
         if($remoto['Type'] === $local['Type']){
@@ -339,6 +354,7 @@ class services{
     /**
      *
      * Se genera archivo lock en la ruta de path
+     * @version 0.12.0
      * @param string $path ruta completa donde se creara archivo lock que se utilizara para verificar si el
      * servicio esta corriendo
      * @return bool|array bool = true si el archivo se genero con exito, array si existe error
