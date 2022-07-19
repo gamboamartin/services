@@ -25,7 +25,7 @@ class services{
         $this->error = new errores();
         $data_service = $this->verifica_servicio(path: $path);
         if(errores::$error){
-            $error = $this->error->error('Error al verificar servicio', $data_service);
+            $error = $this->error->error(mensaje: 'Error al verificar servicio',data:  $data_service);
             print_r($error);
             die('Error');
         }
@@ -104,13 +104,13 @@ class services{
         $data = new stdClass();
         $link_remote = $this->conecta_remoto_mysqli(empresa: $empresa);
         if(errores::$error){
-            return $this->error->error('Error al conectar remoto', $link_remote);
+            return $this->error->error(mensaje: 'Error al conectar remoto', data: $link_remote);
         }
         $data->remote_host = $this->data_conexion->host;
 
         $link_local = $this->conecta_local_mysqli(empresa: $empresa);
         if(errores::$error){
-            return $this->error->error('Error al conectar remoto', $link_local);
+            return $this->error->error(mensaje: 'Error al conectar remoto', data: $link_local);
         }
         $data->local_host = $this->data_conexion->host;
         $data->remote = $link_remote;
@@ -124,13 +124,13 @@ class services{
 
         $data = $this->data_conecta(empresa: $empresa, tipo: '');
         if(errores::$error){
-            return $this->error->error('Error al ajustar datos', $data);
+            return $this->error->error(mensaje: 'Error al ajustar datos', data: $data);
         }
 
         $link = $this->conecta_mysqli(host: $data->host, nombre_base_datos:  $data->nombre_base_datos,
             pass: $data->pass,user:  $data->user);
         if(errores::$error){
-            return $this->error->error('Error al conectar', $link);
+            return $this->error->error(mensaje: 'Error al conectar',data:  $link);
         }
 
         return $link;
@@ -174,13 +174,13 @@ class services{
 
         $data = $this->data_conecta(empresa: $empresa, tipo: 'remote');
         if(errores::$error){
-            return $this->error->error('Error al ajustar datos', $data);
+            return $this->error->error(mensaje: 'Error al ajustar datos', data: $data);
         }
 
         $link = $this->conecta_mysqli(host: $data->host, nombre_base_datos:  $data->nombre_base_datos,
             pass: $data->pass,user:  $data->user);
         if(errores::$error){
-            return $this->error->error('Error al conectar remoto', $link);
+            return $this->error->error(mensaje: 'Error al conectar remoto', data: $link);
         }
 
         return $link;
@@ -323,7 +323,7 @@ class services{
         if(!$servicio_corriendo){
             $files = $this->genera_files(path_info: $name_files->path_info, path_lock: $name_files->path_lock);
             if(errores::$error){
-                return $this->error->error('Error al crear archivos ', $files);
+                return $this->error->error(mensaje: 'Error al crear archivos ',data:  $files);
             }
         }
         return $servicio_corriendo;
@@ -337,7 +337,7 @@ class services{
     }
 
     /**
-     * ERROR UNIT DOC
+     *
      * Se genera archivo lock en la ruta de path
      * @param string $path ruta completa donde se creara archivo lock que se utilizara para verificar si el
      * servicio esta corriendo
@@ -348,12 +348,12 @@ class services{
         $path = trim($path);
         $valida = $this->valida_path(path: $path);
         if(errores::$error){
-            return $this->error->error('Error al validar path', $valida);
+            return $this->error->error(mensaje: 'Error al validar path', data: $valida);
         }
 
         file_put_contents($path, '');
         if(!file_exists($path)){
-            return $this->error->error('Error al crear archivo lock', $path);
+            return $this->error->error(mensaje: 'Error al crear archivo lock', data: $path);
         }
         return true;
     }
@@ -376,17 +376,17 @@ class services{
 
         $valida = $this->valida_paths(path_info: $path_info, path_lock: $path_lock);
         if(errores::$error){
-            return $this->error->error('Error al validar $paths', $valida);
+            return $this->error->error(mensaje: 'Error al validar $paths', data: $valida);
         }
 
         $genera_file_lock = $this->genera_file_lock(path: $path_lock);
         if(errores::$error){
-            return $this->error->error('Error al crear archivo lock', $genera_file_lock);
+            return $this->error->error(mensaje: 'Error al crear archivo lock',data:  $genera_file_lock);
         }
 
         $genera_file_info = $this->genera_file_lock(path: $path_info);
         if(errores::$error){
-            return $this->error->error('Error al crear archivo lock', $genera_file_info);
+            return $this->error->error(mensaje: 'Error al crear archivo lock', data: $genera_file_info);
         }
 
         $data = new stdClass();
@@ -467,7 +467,7 @@ class services{
         $path_lock = $path.'.lock';
         $path_info = $this->name_file_lock(file_base: $path);
         if(errores::$error){
-            return $this->error->error('Error al generar name file', $path_info);
+            return $this->error->error(mensaje: 'Error al generar name file', data: $path_info);
         }
         $data = new stdClass();
         $data->path_lock = $path_lock;
@@ -494,7 +494,7 @@ class services{
 
         $fecha = $calculo->obten_fecha_resta(fecha: $hoy,n_dias: $n_dias,tipo_val: $tipo_val);
         if(errores::$error){
-            return $this->error->error('Error al obtener fecha', $fecha);
+            return $this->error->error(mensaje: 'Error al obtener fecha', data: $fecha);
         }
         return $fecha;
     }
@@ -572,14 +572,14 @@ class services{
      * @param string $path ruta a validar
      * @return bool|array bool = true si el path no esta vacio array si hay error o si existe el archivo
      */
-    PUBLIC function valida_path(string $path): bool|array
+    private function valida_path(string $path): bool|array
     {
         $path = trim($path);
         if($path === ''){
-            return $this->error->error('Error path esta vacio', $path);
+            return $this->error->error(mensaje: 'Error path esta vacio', data: $path);
         }
         if(file_exists($path)){
-            return $this->error->error('Error ya existe el path', $path);
+            return $this->error->error(mensaje: 'Error ya existe el path', data: $path);
         }
         return true;
     }
@@ -597,13 +597,13 @@ class services{
         $path_info = trim($path_info);
         $valida = $this->valida_path(path: $path_info);
         if(errores::$error){
-            return $this->error->error('Error al validar $path_info', $valida);
+            return $this->error->error(mensaje: 'Error al validar $path_info',data:  $valida);
         }
 
         $path_lock = trim($path_lock);
         $valida = $this->valida_path(path: $path_lock);
         if(errores::$error){
-            return $this->error->error('Error al validar $path_lock', $valida);
+            return $this->error->error(mensaje: 'Error al validar $path_lock',data:  $valida);
         }
 
         return true;
@@ -618,12 +618,12 @@ class services{
 
         $name_files = $this->name_files(path: $path);
         if(errores::$error){
-            return $this->error->error('Error al generar name files', $name_files);
+            return $this->error->error(mensaje: 'Error al generar name files', data: $name_files);
         }
 
         $servicio_corriendo = $this->crea_files(name_files: $name_files);
         if(errores::$error){
-            return $this->error->error('Error al crear archivos ', $servicio_corriendo);
+            return $this->error->error(mensaje: 'Error al crear archivos ',data:  $servicio_corriendo);
         }
 
         $data = new stdClass();
