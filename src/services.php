@@ -61,6 +61,7 @@ class services{
 
     /**
      * Compara las estructura de una tabla vs otra
+     * @version 0.28.5
      * @param array $columnas_remotas Conjunto de columnas remotas a comparar
      * @param array $local columna de registro local
      * @param stdClass $val
@@ -70,11 +71,25 @@ class services{
     {
         $val_ = $val;
         foreach ($columnas_remotas as $column_remoto){
+            if(!is_array($column_remoto)){
+                return (new errores())->error(mensaje: 'Error columns_remoto debe ser un array',data:  $column_remoto);
+            }
+
+            $keys = array('Field');
+            $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $column_remoto);
+            if(errores::$error){
+                return (new errores())->error(mensaje: 'Error al validar columns_remoto',data:  $valida);
+            }
+            $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $local);
+            if(errores::$error){
+                return (new errores())->error(mensaje: 'Error al validar $local',data:  $valida);
+            }
+
             if($column_remoto['Field'] === $local['Field']){
 
                 $val_ = $this->compara_estructura_tabla(local:$column_remoto,remoto:  $local,val:  $val_);
                 if(errores::$error){
-                    return (new errores())->error('Error comparar datos', $val_);
+                    return (new errores())->error(mensaje: 'Error comparar datos',data:  $val_);
                 }
                 break;
             }

@@ -17,6 +17,35 @@ class servicesTest extends test {
         $this->errores = new errores();
     }
 
+    public function test_compara_estructura_synk(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        $srv = new liberator($srv);
+        $columnas_remotas = array();
+        $local = array();
+        $val = new stdClass();
+
+        $columnas_remotas[0] = array();
+        $columnas_remotas[0]['Field'] = 'x';
+        $columnas_remotas[0]['Type'] = 'x';
+        $columnas_remotas[0]['Null'] = 'x';
+        $columnas_remotas[0]['Key'] = 'x';
+        $columnas_remotas[0]['Extra'] = 'x';
+        $local['Field'] =   'x';
+        $local['Type'] =   'x';
+        $local['Null'] =   'x';
+        $local['Extra'] =   'x';
+        $local['Key'] =   'x';
+
+        $resultado = $srv->compara_estructura_synk($columnas_remotas, $local, $val);
+        $this->assertIsObject( $resultado);
+        $this->assertNotTrue(errores::$error);
+    }
+
     public function test_compara_estructura_tabla(): void
     {
         errores::$error = false;
