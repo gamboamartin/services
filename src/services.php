@@ -37,7 +37,22 @@ class services{
         }
     }
 
-    public function compara_estructura_synk(array $columnas_remotas, array $local, stdClass $val): array|stdClass
+    public function compara_estructura(array $columnas_remotas, array $local): array|stdClass
+    {
+        $val =$this->init_val_tabla();
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error inicializar datos',data:  $val);
+        }
+
+        $val = $this->compara_estructura_synk(columnas_remotas: $columnas_remotas, local: $local, val: $val);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error comparar datos', data: $val);
+
+        }
+        return $val;
+    }
+
+    private function compara_estructura_synk(array $columnas_remotas, array $local, stdClass $val): array|stdClass
     {
         foreach ($columnas_remotas as $column_remoto){
             if($column_remoto['Field'] === $local['Field']){
@@ -73,6 +88,8 @@ class services{
 
         return $val;
     }
+
+
 
 
 
@@ -344,6 +361,8 @@ class services{
         return $servicio_corriendo;
     }
 
+
+
     public function finaliza_servicio(): stdClass
     {
         unlink($this->name_files->path_info);
@@ -415,7 +434,7 @@ class services{
      * Inicializa en falso los elementos a validar de una tabla de dos bases de datos
      * @return stdClass existe, tipo_dato, null, key, default, extra
      */
-    public function init_val_tabla(): stdClass
+    private function init_val_tabla(): stdClass
     {
         $data = new stdClass();
         $data->existe = false;
