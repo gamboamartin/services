@@ -3,6 +3,7 @@ namespace gamboamartin\services;
 use config\database;
 use gamboamartin\calculo\calculo;
 use gamboamartin\errores\errores;
+use gamboamartin\validacion\validacion;
 use mysqli;
 use PDO;
 use stdClass;
@@ -117,6 +118,16 @@ class services{
      */
     public function conecta_pdo(stdClass|database $conf_database): PDO|array
     {
+        $keys = array('db_host','db_name','db_user','db_password','set_name','sql_mode','time_out');
+        $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $conf_database,valida_vacio: false);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
+        }
+        $keys = array('db_host','db_name','db_user','db_password','set_name','time_out');
+        $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $conf_database);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
+        }
         try {
             $link = new PDO("mysql:host=$conf_database->db_host;dbname=$conf_database->db_name",
                 $conf_database->db_user, $conf_database->db_password);
@@ -403,7 +414,7 @@ class services{
     /**
      *
      * Se verifica si el path esta vacio, o el archivo existe, el archivo no debe existir para retornar true
-     * @version v0.2.0 
+     * @version v0.2.0
      * @param string $path ruta a validar
      * @return bool|array bool = true si el path no esta vacio array si hay error o si existe el archivo
      */

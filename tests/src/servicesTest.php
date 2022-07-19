@@ -50,6 +50,32 @@ class servicesTest extends test {
 
     }
 
+    public function test_conecta_pdo(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        //$srv = new liberator($srv);
+
+
+        $conf_database = new stdClass();
+        $conf_database->db_host = 'localhost';
+        $conf_database->db_name = 'test';
+        $conf_database->db_user = 'test';
+        $conf_database->db_password = 'xxx';
+        $conf_database->set_name = 'UTF8';
+        $conf_database->sql_mode = '';
+        $conf_database->time_out = '10';
+
+        $resultado = $srv->conecta_pdo(conf_database: $conf_database);
+        $this->assertIsObject( $resultado);
+        $this->assertNotTrue(errores::$error);
+
+
+    }
+
 
 
     public function test_data_conecta(): void
