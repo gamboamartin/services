@@ -17,6 +17,38 @@ class servicesTest extends test {
         $this->errores = new errores();
     }
 
+    public function test_compara_estructura_tabla(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        $srv = new liberator($srv);
+        $local = array();
+        $remoto = array();
+        $val = new stdClass();
+        $local['Type'] = '';
+        $local['Null'] = '';
+        $local['Key'] = '';
+        $local['Default'] = '';
+        $local['Extra'] = '';
+
+        $remoto['Type'] = '';
+        $remoto['Null'] = '';
+        $remoto['Key'] = '';
+        $remoto['Default'] = '';
+        $remoto['Extra'] = '';
+
+
+
+        $resultado = $srv->compara_estructura_tabla($local, $remoto, $val);
+        $this->assertIsObject( $resultado);
+        $this->assertNotTrue(errores::$error);
+
+        errores::$error = false;
+    }
+
 
     public function test_conecta_mysqli(): void
     {

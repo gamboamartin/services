@@ -78,10 +78,26 @@ class services{
      * @param array $local Columnas en local
      * @param array $remoto Columnas en remoto
      * @param stdClass $val Validacion inicializada en false
-     * @return stdClass
+     * @return stdClass|array
+     * @version 0.23.1
      */
-    private function compara_estructura_tabla(array $local, array $remoto,stdClass $val): stdClass
+    private function compara_estructura_tabla(array $local, array $remoto,stdClass $val): stdClass|array
     {
+        $keys = array('Type','Null','Key','Default','Extra');
+        $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $local, valida_vacio: false);
+        if(errores::$error){
+            return (new errores())->error('Error validar $local', $valida);
+        }
+        $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $remoto, valida_vacio: false);
+        if(errores::$error){
+            return (new errores())->error('Error validar $remoto', $valida);
+        }
+
+        foreach ($keys as $key){
+            $remoto[$key] = trim($remoto[$key]);
+            $local[$key] = trim($local[$key]);
+        }
+
         $val->existe = true;
         if($remoto['Type'] === $local['Type']){
             $val->tipo_dato = true;
