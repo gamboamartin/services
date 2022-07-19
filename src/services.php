@@ -199,41 +199,34 @@ class services{
     {
         $db = new database();
 
-        $valida = $this->valida_data_conexion(conf_database:  $db);
+        $valida = $this->valida_conexion_modelo(conf_database: $db, name_model: $name_model);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
         }
-        $name_model = trim($name_model);
-        if($name_model === ''){
-            return (new errores())->error(mensaje: 'Error name model esta vacio',data:  $name_model);
-        }
 
-
-        $link_local = $this->conecta_pdo(conf_database: $db);
+        $data = $this->data_full_model(conf_database: $db, name_model: $name_model);
         if(errores::$error){
-            return (new errores())->error(mensaje: 'Error al conectar a base de datos',data:  $link_local);
-        }
-
-        $modelo_local = (new modelo_base(link: $link_local))->genera_modelo(modelo: $name_model);
-        if(errores::$error){
-            return (new errores())->error(mensaje: 'Error al generar modelo',data:  $modelo_local);
-        }
-
-        $columnas_local = (new columnas())->columnas_bd_native(modelo:$modelo_local, tabla_bd: $modelo_local->tabla);
-        if(errores::$error){
-            return (new errores())->error(mensaje: 'Error al obtener columnas local', data: $columnas_local);
+            return (new errores())->error(mensaje: 'Error al obtener datos de conexion', data: $data);
 
         }
-        $n_columnas_local = count($columnas_local);
-
-        $data = new stdClass();
-        $data->link = $link_local;
-        $data->modelo = $modelo_local;
-        $data->columnas = $columnas_local;
-        $data->n_columnas = $n_columnas_local;
-
         return $data;
 
+    }
+
+    public function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
+    {
+        $valida = $this->valida_conexion_modelo(conf_database: $conf_database, name_model: $name_model);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
+        }
+
+        $data = $this->data_full_model(conf_database: $conf_database, name_model: $name_model);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al obtener datos de conexion', data: $data);
+
+        }
+
+        return $data;
     }
 
     private function data_empresa(stdClass $data, array $empresa, string $key_base, string $tipo): array|stdClass
@@ -248,6 +241,44 @@ class services{
         }
 
         $data->$key_base = $empresa[$key_empresa];
+        return $data;
+    }
+
+    private function data_full_model(stdClass|database $conf_database, string $name_model): array|stdClass
+    {
+        $valida = $this->valida_data_conexion(conf_database:  $conf_database);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
+        }
+
+        $name_model = trim($name_model);
+        if($name_model === ''){
+            return (new errores())->error(mensaje: 'Error name model esta vacio',data:  $name_model);
+        }
+
+        $link = $this->conecta_pdo(conf_database: $conf_database);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al conectar a base de datos',data:  $link);
+        }
+
+        $modelo = (new modelo_base(link: $link))->genera_modelo(modelo: $name_model);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al generar modelo',data:  $modelo);
+        }
+
+        $columnas = (new columnas())->columnas_bd_native(modelo:$modelo, tabla_bd: $modelo->tabla);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al obtener columnas local', data: $columnas);
+
+        }
+        $n_columnas = count($columnas);
+
+        $data = new stdClass();
+        $data->link = $link;
+        $data->modelo = $modelo;
+        $data->columnas = $columnas;
+        $data->n_columnas = $n_columnas;
+
         return $data;
     }
 
@@ -455,6 +486,20 @@ class services{
         if($user === ''){
             return $this->error->error(mensaje:'Error el $pass esta vacio', data:$user);
         }
+        return true;
+    }
+
+    private function valida_conexion_modelo(stdClass|database $conf_database, string $name_model): bool|array
+    {
+        $valida = $this->valida_data_conexion(conf_database:  $conf_database);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
+        }
+        $name_model = trim($name_model);
+        if($name_model === ''){
+            return (new errores())->error(mensaje: 'Error name model esta vacio',data:  $name_model);
+        }
+
         return true;
     }
 
