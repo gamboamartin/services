@@ -695,6 +695,21 @@ class services{
         return $val;
     }
 
+    public function verifica_numero_columnas(stdClass $data_local, stdClass $data_remoto): bool|array
+    {
+        if($data_remoto->n_columnas > $data_local->n_columnas){
+            return (new errores())->error(mensaje: 'Error las columnas remotas son mayores a las columnas locales',
+                data: array('remoto'=>$data_remoto->columnas,'local'=>$data_local->columnas));
+
+        }
+        if($data_remoto->n_columnas < $data_local->n_columnas){
+            return (new errores())->error(mensaje: 'Error las columnas remotas son menores a las columnas locales',
+                data: array('remoto'=>$data_remoto->columnas,'local'=>$data_local->columnas));
+        }
+
+        return true;
+    }
+
     /**
      * Verifica si un servicio esta corriendo
      * @version 0.19.0
