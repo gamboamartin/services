@@ -1,12 +1,14 @@
 <?php
 namespace gamboamartin\services;
 use base\orm\columnas;
+use base\orm\modelo;
 use base\orm\modelo_base;
 use base\orm\validaciones;
 use config\database;
 use gamboamartin\calculo\calculo;
 use gamboamartin\errores\errores;
 use gamboamartin\validacion\validacion;
+use JsonException;
 use mysqli;
 use PDO;
 use stdClass;
@@ -501,6 +503,23 @@ class services{
     }
 
     /**
+     * @throws JsonException
+     */
+    public function inserta_row_limpio(modelo $modelo, array $registro): array
+    {
+        $registro = $this->limpia_row_alta(registro: $registro);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al limpiar registro', data: $registro);
+
+        }
+        $r_alta = $modelo->alta_registro(registro: $registro);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al insertar registro', data: $r_alta);
+        }
+        return $r_alta;
+    }
+
+    /**
      * Genera el key de busqueda de una empresa, puede ser remote o vacio para local
      * @param string $tipo puede ser remote o vacio remote para conexion remota, vacio para conexion local
      * @return string con el key a buscar para empresas
@@ -524,7 +543,7 @@ class services{
         return $key.$key_base;
     }
 
-    public function limpia_row_alta(array $registro): array
+    private function limpia_row_alta(array $registro): array
     {
         unset($registro['usuario_alta_id'],$registro['usuario_update_id']);
         return $registro;
