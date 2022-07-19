@@ -338,8 +338,9 @@ class services{
 
 
     /**
-     * DOC ERROR
+     *
      * Genera los archivos necesarios para el bloqueo de un servicio
+     * @version 0.16.0
      * @param stdClass $name_files nombre de los archivos name_files->path_info, name_files->path_lock
      * name_files->path_info = path con fecha para informacion
      * name_files->path_lock = path de bloqueo de servicio
@@ -347,6 +348,12 @@ class services{
      */
     private function crea_files(stdClass $name_files): bool|array
     {
+        $keys = array('path_lock','path_info');
+        $valida = (new validacion())->valida_existencia_keys(keys: $keys, registro: $name_files);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar $name_files ',data:  $valida);
+        }
+
         $servicio_corriendo = false;
         if(file_exists($name_files->path_lock)){
             $servicio_corriendo = true;

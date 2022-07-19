@@ -76,6 +76,42 @@ class servicesTest extends test {
 
     }
 
+    public function test_crea_files(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+        $srv = new liberator($srv);
+        if(file_exists('1')){
+            unlink('1');
+        }
+        if(file_exists('2')){
+            unlink('2');
+        }
+        if(file_exists('a')){
+            unlink('a');
+        }
+        $path_info = '1';
+        $path_lock = '2';
+        $name_files = new stdClass();
+        $name_files->path_lock = $path_lock;
+        $name_files->path_info = $path_info;
+        $resultado = $srv->crea_files($name_files);
+        $this->assertIsBool( $resultado);
+        $this->assertNotTrue(errores::$error);
+        $this->assertFileExists('1');
+        $this->assertFileExists('2');
+
+
+        if(file_exists('1')){
+            unlink('1');
+        }
+        if(file_exists('2')){
+            unlink('2');
+        }
+    }
+
 
 
     public function test_data_conecta(): void
