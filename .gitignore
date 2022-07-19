@@ -60,3 +60,5 @@ composer.lock
 /config/database.php
 
 /vendor/
+*.info
+*.lock

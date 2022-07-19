@@ -289,7 +289,7 @@ class servicesTest extends test {
         }
         $path = 'test.file';
         $srv = new services($path);
-
+        $srv = new liberator($srv);
         $resultado = $srv->name_files($path);
         $this->assertIsObject( $resultado);
         $this->assertNotTrue(errores::$error);
@@ -521,6 +521,24 @@ class servicesTest extends test {
         $resultado = $srv->valida_paths($path_info,$path_lock);
         $this->assertIsBool( $resultado);
         $this->assertNotTrue(errores::$error);
+        errores::$error = false;
+    }
+
+    public function test_verifica_servicio(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        //$srv = new liberator($srv);
+
+        $path = 'a';
+
+        $resultado = $srv->verifica_servicio($path);
+        $this->assertIsObject( $resultado);
+        $this->assertNotTrue(errores::$error);
+
         errores::$error = false;
     }
 

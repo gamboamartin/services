@@ -501,7 +501,7 @@ class services{
      * @param string $path Ruta de servicio en ejecucion
      * @return array|stdClass
      */
-    PUBLIC function name_files(string $path): array|stdClass
+    private function name_files(string $path): array|stdClass
     {
         $path = trim($path);
         if($path === ''){
@@ -690,11 +690,16 @@ class services{
 
     /**
      * Verifica si un servicio esta corriendo
+     * @version 0.19.0
      * @param string $path Ruta de servicio en ejecucion
      * @return stdClass|array
      */
     public function verifica_servicio(string $path): stdClass|array
     {
+        $path = trim($path);
+        if($path === ''){
+            return $this->error->error(mensaje: 'Error $path esta vacio', data: $path);
+        }
 
         $name_files = $this->name_files(path: $path);
         if(errores::$error){
