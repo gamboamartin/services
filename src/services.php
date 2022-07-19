@@ -524,6 +524,12 @@ class services{
         return $key.$key_base;
     }
 
+    public function limpia_row_alta(array $registro): array
+    {
+        unset($registro['usuario_alta_id'],$registro['usuario_update_id']);
+        return $registro;
+    }
+
     /**
      * Genera el nombre de file para info de un servicio para poder identificar a que hora se ejecuto
      * @version 1.0.0
