@@ -535,6 +535,14 @@ class services{
         return $fecha;
     }
 
+    public function valida_columna(array $column_local, string $key, stdClass $val): bool|array
+    {
+        if(!$val->$key){
+            return  (new errores())->error(mensaje: 'Error no existe columna en remoto', data: $column_local);
+        }
+        return true;
+    }
+
     /**
      *  TODO
      *  Verifica los datos necesarios para conectarse a una base de datos mysql
