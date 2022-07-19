@@ -39,7 +39,7 @@ class services{
 
     /**
      * @param array $columnas_remotas Conjunto de columnas remotas a comparar
-     * @param array $local
+     * @param array $local columna de registro local
      * @return array|stdClass
      */
     private function compara_estructura(array $columnas_remotas, array $local): array|stdClass
@@ -60,7 +60,7 @@ class services{
     /**
      * Compara las estructura de una tabla vs otra
      * @param array $columnas_remotas Conjunto de columnas remotas a comparar
-     * @param array $local
+     * @param array $local columna de registro local
      * @param stdClass $val
      * @return array|stdClass
      */
@@ -714,7 +714,7 @@ class services{
     }
 
     /**
-     * @param array $columnas_local
+     * @param array $columnas_local columnas de registro local
      * @param array $columnas_remotas Conjunto de columnas remotas a comparar
      * @return array|stdClass
      */
@@ -731,7 +731,7 @@ class services{
     }
 
     /**
-     * @param array $column_local
+     * @param array $column_local columna de registro local
      * @param array $columnas_remotas Conjunto de columnas remotas a comparar
      * @return array|stdClass
      */
@@ -801,6 +801,13 @@ class services{
 
     }
 
+    /**
+     * @param stdClass $data_local
+     * @param stdClass $data_remoto
+     * @param stdClass|database $database
+     * @param string $tabla
+     * @return bool|array
+     */
     public function verifica_tabla_synk(stdClass $data_local,stdClass $data_remoto, stdClass|database $database, string $tabla): bool|array
     {
         $existe_tabla = (new validaciones())->existe_tabla(link:  $data_remoto->link, name_bd: $database->db_name,tabla: $tabla);
