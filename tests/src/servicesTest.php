@@ -132,11 +132,44 @@ class servicesTest extends test {
         errores::$error = false;
     }
 
+    public function test_genera_files(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+        $srv = new liberator($srv);
+        if(file_exists('1')){
+            unlink('1');
+        }
+        if(file_exists('2')){
+            unlink('2');
+        }
+        if(file_exists('a')){
+            unlink('a');
+        }
+        $path_info = '1';
+        $path_lock = '2';
+        $resultado = $srv->genera_files($path_info, $path_lock);
+        $this->assertIsObject( $resultado);
+        $this->assertNotTrue(errores::$error);
+
+        if(file_exists('1')){
+            unlink('1');
+        }
+        if(file_exists('2')){
+            unlink('2');
+        }
+
+
+    }
+
     public function test_genera_file_lock(): void
     {
         errores::$error = false;
 
         $srv = new services(__FILE__);
+
 
         $srv = new liberator($srv);
 

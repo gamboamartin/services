@@ -394,10 +394,11 @@ class services{
     }
 
     /**
-     * ERROR DOC
+     *
      * Genera los archivos para bloquear un servicio y uno con la fecha para informacion de ejecucion
+     * @version 0.14.0
      * @param string $path_info Path info con fecha
-     * @param string $path_lock Path para bloquear servcio
+     * @param string $path_lock Path para bloquear servicio
      * @return array|stdClass array si existe un error
      *  data = stdclass
      *  retorna un objeto obj->genera_file_lock = bool = true
