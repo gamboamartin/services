@@ -2,6 +2,7 @@
 namespace gamboamartin\services;
 use base\orm\columnas;
 use base\orm\modelo;
+use base\orm\modelo_base;
 use config\database;
 use gamboamartin\calculo\calculo;
 use gamboamartin\errores\errores;
@@ -115,21 +116,18 @@ class services{
 
     /**
      * Conexion a base de datos visa mysql con pdo
+     * @version 0.4.0
      * @param stdClass|database $conf_database Debe tener db_host, db_name, db_user, db_password, set_name, sql_mode, time_out
      * @return PDO|array
      */
     public function conecta_pdo(stdClass|database $conf_database): PDO|array
     {
-        $keys = array('db_host','db_name','db_user','db_password','set_name','sql_mode','time_out');
-        $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $conf_database,valida_vacio: false);
+
+        $valida = $this->valida_data_conexion(conf_database:  $conf_database);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
         }
-        $keys = array('db_host','db_name','db_user','db_password','set_name','time_out');
-        $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $conf_database);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
-        }
+
         try {
             $link = new PDO("mysql:host=$conf_database->db_host;dbname=$conf_database->db_name",
                 $conf_database->db_user, $conf_database->db_password);
@@ -191,14 +189,32 @@ class services{
         return $data;
     }
 
+    /**
+     * Obtiene los datos de una conexion local link, modelo, columnas, n_columnas
+     * @version 0.5.0
+     * @param string $name_model Nombre del modelo a obtener datos
+     * @return array|stdClass
+     */
     public function data_conexion_local(string $name_model): array|stdClass
     {
         $db = new database();
 
+        $valida = $this->valida_data_conexion(conf_database:  $db);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
+        }
+        $name_model = trim($name_model);
+        if($name_model === ''){
+            return (new errores())->error(mensaje: 'Error name model esta vacio',data:  $name_model);
+        }
+
+
         $link_local = $this->conecta_pdo(conf_database: $db);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error al conectar a base de datos',data:  $link_local);
+        }
 
-
-        $modelo_local = (new modelo(link: $link_local, tabla: ''))->genera_modelo(modelo: $name_model);
+        $modelo_local = (new modelo_base(link: $link_local))->genera_modelo(modelo: $name_model);
         if(errores::$error){
             return (new errores())->error(mensaje: 'Error al generar modelo',data:  $modelo_local);
         }
@@ -439,6 +455,22 @@ class services{
         if($user === ''){
             return $this->error->error(mensaje:'Error el $pass esta vacio', data:$user);
         }
+        return true;
+    }
+
+    private function valida_data_conexion(stdClass|database $conf_database): bool|array
+    {
+        $keys = array('db_host','db_name','db_user','db_password','set_name','sql_mode','time_out');
+        $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $conf_database,valida_vacio: false);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
+        }
+        $keys = array('db_host','db_name','db_user','db_password','set_name','time_out');
+        $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $conf_database);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
+        }
+
         return true;
     }
 

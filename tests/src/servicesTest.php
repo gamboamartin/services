@@ -113,6 +113,25 @@ class servicesTest extends test {
         errores::$error = false;
     }
 
+    public function test_data_conexion_local(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        //$srv = new liberator($srv);
+
+        $name_model= 'adm_seccion';
+
+        $resultado = $srv->data_conexion_local($name_model);
+        $this->assertIsObject( $resultado);
+        $this->assertNotTrue(errores::$error);
+
+
+        errores::$error = false;
+    }
+
     public function test_genera_file_lock(): void
     {
         errores::$error = false;
