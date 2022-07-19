@@ -660,7 +660,19 @@ class services{
         return true;
     }
 
-    public function verifica_estructura_por_columna(array $column_local, array $columnas_remotas): array|stdClass
+    public function verifica_columnas(array $columnas_local, array $columnas_remotas ): array|stdClass
+    {
+        $valida = new stdClass();
+        foreach ($columnas_local as $column_local){
+            $valida = $this->verifica_estructura_por_columna(column_local: $column_local, columnas_remotas: $columnas_remotas);
+            if(errores::$error){
+                return (new errores())->error(mensaje: 'Error comparar datos '.$valida, data: $valida);
+            }
+        }
+        return $valida;
+    }
+
+    private function verifica_estructura_por_columna(array $column_local, array $columnas_remotas): array|stdClass
     {
         $val = $this->compara_estructura(columnas_remotas: $columnas_remotas, local: $column_local);
         if(errores::$error){
@@ -677,6 +689,7 @@ class services{
     }
 
     /**
+     * Verifica si un servicio esta corriendo
      * @param string $path Ruta de servicio en ejecucion
      * @return stdClass|array
      */
