@@ -53,6 +53,7 @@ class services{
     }
 
     /**
+     * Compara las estructura de una tabla vs otra
      * @param array $columnas_remotas
      * @param array $local
      * @param stdClass $val
@@ -60,17 +61,18 @@ class services{
      */
     private function compara_estructura_synk(array $columnas_remotas, array $local, stdClass $val): array|stdClass
     {
+        $val_ = $val;
         foreach ($columnas_remotas as $column_remoto){
             if($column_remoto['Field'] === $local['Field']){
 
-                $val = $this->compara_estructura_tabla(local:$column_remoto,remoto:  $local,val:  $val);
+                $val_ = $this->compara_estructura_tabla(local:$column_remoto,remoto:  $local,val:  $val_);
                 if(errores::$error){
-                    return (new errores())->error('Error comparar datos', $val);
+                    return (new errores())->error('Error comparar datos', $val_);
                 }
                 break;
             }
         }
-        return $val;
+        return $val_;
     }
 
     /**
@@ -699,7 +701,7 @@ class services{
         foreach ($columnas_local as $column_local){
             $valida = $this->verifica_estructura_por_columna(column_local: $column_local, columnas_remotas: $columnas_remotas);
             if(errores::$error){
-                return (new errores())->error(mensaje: 'Error comparar datos '.$valida, data: $valida);
+                return (new errores())->error(mensaje: 'Error comparar datos ', data: $valida);
             }
         }
         return $valida;
