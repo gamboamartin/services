@@ -2,6 +2,7 @@
 namespace gamboamartin\services;
 use base\orm\columnas;
 use base\orm\modelo_base;
+use base\orm\validaciones;
 use config\database;
 use gamboamartin\calculo\calculo;
 use gamboamartin\errores\errores;
@@ -51,6 +52,12 @@ class services{
         return $val;
     }
 
+    /**
+     * @param array $columnas_remotas
+     * @param array $local
+     * @param stdClass $val
+     * @return array|stdClass
+     */
     private function compara_estructura_synk(array $columnas_remotas, array $local, stdClass $val): array|stdClass
     {
         foreach ($columnas_remotas as $column_remoto){
@@ -66,6 +73,13 @@ class services{
         return $val;
     }
 
+    /**
+     * Compara que la estructura interna de dos tablas coincida
+     * @param array $local Columnas en local
+     * @param array $remoto Columnas en remoto
+     * @param stdClass $val Validacion inicializada en false
+     * @return stdClass
+     */
     private function compara_estructura_tabla(array $local, array $remoto,stdClass $val): stdClass
     {
         $val->existe = true;
@@ -663,7 +677,7 @@ class services{
         return true;
     }
 
-    public function verifica_columnas(array $columnas_local, array $columnas_remotas ): array|stdClass
+    private function verifica_columnas(array $columnas_local, array $columnas_remotas ): array|stdClass
     {
         $valida = new stdClass();
         foreach ($columnas_local as $column_local){
@@ -695,7 +709,7 @@ class services{
         return $val;
     }
 
-    public function verifica_numero_columnas(stdClass $data_local, stdClass $data_remoto): bool|array
+    private function verifica_numero_columnas(stdClass $data_local, stdClass $data_remoto): bool|array
     {
         if($data_remoto->n_columnas > $data_local->n_columnas){
             return (new errores())->error(mensaje: 'Error las columnas remotas son mayores a las columnas locales',
@@ -739,5 +753,25 @@ class services{
         $data->corriendo = $servicio_corriendo;
         return $data;
 
+    }
+
+    public function verifica_tabla_synk(stdClass $data_local,stdClass $data_remoto, stdClass|database $database, string $tabla): bool|array
+    {
+        $existe_tabla = (new validaciones())->existe_tabla(link:  $data_remoto->link, name_bd: $database->db_name,tabla: $tabla);
+        if(!$existe_tabla){
+            return  (new errores())->error(mensaje: 'Error no existe la tabla',data:  $tabla);
+        }
+
+        $valida = $this->verifica_numero_columnas(data_local: $data_local, data_remoto: $data_remoto);
+        if(errores::$error){
+            return (new errores())->error(mensaje: 'Error comparar datos '.$valida,data:  $valida);
+        }
+
+        $valida = $this->verifica_columnas(columnas_local: $data_local->columnas,columnas_remotas:  $data_remoto->columnas);
+        if(errores::$error){
+            return (new errores())->error('Error comparar datos '.$valida, $valida);
+        }
+
+        return true;
     }
 }
