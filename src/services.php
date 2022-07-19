@@ -85,6 +85,13 @@ class services{
      */
     private function compara_estructura_tabla(array $local, array $remoto,stdClass $val): stdClass|array
     {
+        if(!isset($local['Default'])){
+            $local['Default'] = '';
+        }
+        if(!isset($remoto['Default'])){
+            $remoto['Default'] = '';
+        }
+
         $keys = array('Type','Null','Key','Default','Extra');
         $valida = (new validacion())->valida_existencia_keys(keys: $keys,registro:  $local, valida_vacio: false);
         if(errores::$error){
