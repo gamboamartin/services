@@ -347,6 +347,11 @@ class services{
 
     }
 
+    /**
+     * @param stdClass $conf_database Configuracion de conexion a la base de datos
+     * @param string $name_model
+     * @return array|stdClass
+     */
     public function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
     {
         $valida = $this->valida_conexion_modelo(conf_database: $conf_database, name_model: $name_model);
@@ -687,6 +692,12 @@ class services{
         return true;
     }
 
+    /**
+     * Valida la conexion de una base de datos junto con la existencia del modelo
+     * @param stdClass|database $conf_database Configuracion de conexion a la base de datos
+     * @param string $name_model Nombre del modelo a verificar
+     * @return bool|array
+     */
     private function valida_conexion_modelo(stdClass|database $conf_database, string $name_model): bool|array
     {
         $valida = $this->valida_data_conexion(conf_database:  $conf_database);
