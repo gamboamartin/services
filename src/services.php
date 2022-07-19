@@ -373,6 +373,20 @@ class services{
         return $data;
     }
 
+    public function init_val_tabla(): stdClass
+    {
+        $data = new stdClass();
+        $data->existe_columna_en_remoto = false;
+        $data->tipo_dato_en_remoto_valido = false;
+        $data->null_en_remoto_valido = false;
+        $data->key_en_remoto_valido = false;
+        $data->default_en_remoto_valido = false;
+        $data->extra_en_remoto_valido = false;
+        return $data;
+
+
+    }
+
     /**
      * Genera el key de busqueda de una empresa, puede ser remote o vacio para local
      * @param string $tipo puede ser remote o vacio remote para conexion remota, vacio para conexion local
