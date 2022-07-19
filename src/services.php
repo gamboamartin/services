@@ -37,6 +37,28 @@ class services{
         }
     }
 
+    public function compara_estructura_tabla(array $local, array $remoto,stdClass $val): stdClass
+    {
+        $val->existe = true;
+        if($remoto['Type'] === $local['Type']){
+            $val->tipo_dato = true;
+        }
+        if($remoto['Null'] === $local['Null']){
+            $val->null = true;
+        }
+        if($remoto['Key'] === $local['Key']){
+            $val->key = true;
+        }
+        if($remoto['Default'] === $local['Default']){
+            $val->default = true;
+        }
+        if($remoto['Extra'] === $local['Extra']){
+            $val->extra = true;
+        }
+
+        return $val;
+    }
+
 
 
     /**
