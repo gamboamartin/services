@@ -263,6 +263,117 @@ class servicesTest extends test {
         $srv->finaliza_servicio();
     }
 
+    public function test_valida_data_conexion(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        $srv = new liberator($srv);
+
+        $conf_database= new stdClass();
+
+
+        $resultado = $srv->valida_data_conexion($conf_database);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar conf',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $conf_database= new stdClass();
+        $conf_database->db_host = '';
+
+        $resultado = $srv->valida_data_conexion($conf_database);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar conf',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $conf_database= new stdClass();
+        $conf_database->db_host = '';
+        $conf_database->db_name = '';
+
+        $resultado = $srv->valida_data_conexion($conf_database);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar conf',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $conf_database= new stdClass();
+        $conf_database->db_host = '';
+        $conf_database->db_name = '';
+        $conf_database->db_user = '';
+
+        $resultado = $srv->valida_data_conexion($conf_database);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar conf',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $conf_database= new stdClass();
+        $conf_database->db_host = '';
+        $conf_database->db_name = '';
+        $conf_database->db_user = '';
+        $conf_database->db_password = '';
+
+        $resultado = $srv->valida_data_conexion($conf_database);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar conf',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $conf_database= new stdClass();
+        $conf_database->db_host = '';
+        $conf_database->db_name = '';
+        $conf_database->db_user = '';
+        $conf_database->db_password = '';
+        $conf_database->set_name = '';
+
+        $resultado = $srv->valida_data_conexion($conf_database);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar conf',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $conf_database= new stdClass();
+        $conf_database->db_host = '';
+        $conf_database->db_name = '';
+        $conf_database->db_user = '';
+        $conf_database->db_password = '';
+        $conf_database->set_name = '';
+        $conf_database->sql_mode = '';
+        $conf_database->time_out = '';
+
+        $resultado = $srv->valida_data_conexion($conf_database);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al validar conf',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $conf_database= new stdClass();
+        $conf_database->db_host = 'a';
+        $conf_database->db_name = 'a';
+        $conf_database->db_user = 'a';
+        $conf_database->db_password = 'a';
+        $conf_database->set_name = 'a';
+        $conf_database->sql_mode = '';
+        $conf_database->time_out = 'a';
+
+        $resultado = $srv->valida_data_conexion($conf_database);
+        $this->assertIsBool( $resultado);
+        $this->assertNotTrue(errores::$error);
+        errores::$error = false;
+
+    }
+
     public function test_valida_path(): void
     {
         errores::$error = false;

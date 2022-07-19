@@ -503,6 +503,12 @@ class services{
         return true;
     }
 
+    /**
+     * Valida los datos minimos de una conexion a base de datos
+     * @version 0.7.0
+     * @param stdClass|database $conf_database Configuracion de la base datos como params
+     * @return bool|array
+     */
     private function valida_data_conexion(stdClass|database $conf_database): bool|array
     {
         $keys = array('db_host','db_name','db_user','db_password','set_name','sql_mode','time_out');
