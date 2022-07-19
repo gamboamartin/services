@@ -241,6 +241,25 @@ class servicesTest extends test {
         $srv->finaliza_servicio();
     }
 
+    public function test_init_tabla(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        $srv = new liberator($srv);
+
+        $resultado = $srv->init_val_tabla();
+        $this->assertNotTrue( $resultado->existe);
+        $this->assertNotTrue( $resultado->tipo_dato);
+        $this->assertNotTrue( $resultado->null);
+        $this->assertNotTrue( $resultado->key);
+        $this->assertNotTrue( $resultado->default);
+        $this->assertNotTrue( $resultado->extra);
+        errores::$error = false;
+    }
+
     public function test_name_file_lock(): void
     {
         errores::$error = false;

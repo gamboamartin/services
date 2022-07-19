@@ -439,6 +439,7 @@ class services{
 
     /**
      * Inicializa en falso los elementos a validar de una tabla de dos bases de datos
+     * @version 0.20.1
      * @return stdClass existe, tipo_dato, null, key, default, extra
      */
     private function init_val_tabla(): stdClass
