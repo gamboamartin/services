@@ -583,6 +583,15 @@ class services{
         return $key.$key_base;
     }
 
+    /**
+     * Limpia datos para alta bd
+     * @param array $registro Registro  previo a insersion
+     * @version 0.31.6
+     * @verfuncion 0.1.0
+     * @author mgamboa
+     * @fecha 2022-07-25 15:32
+     * @return array
+     */
     private function limpia_row_alta(array $registro): array
     {
         unset($registro['usuario_alta_id'],$registro['usuario_update_id']);

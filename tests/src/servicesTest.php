@@ -321,6 +321,25 @@ class servicesTest extends test {
         errores::$error = false;
     }
 
+    public function test_limpia_row_alta(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        $srv = new liberator($srv);
+
+
+        $registro =   array();
+
+        $resultado = $srv->limpia_row_alta($registro);
+        $this->assertIsArray( $resultado);
+        $this->assertNotTrue(errores::$error);
+
+        errores::$error = false;
+    }
+
     public function test_name_file_lock(): void
     {
         errores::$error = false;
