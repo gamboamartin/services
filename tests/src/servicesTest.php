@@ -217,7 +217,7 @@ class servicesTest extends test {
         $srv = new services(__FILE__);
         $srv->finaliza_servicio();
 
-        //$srv = new liberator($srv);
+        $srv = new liberator($srv);
 
         $name_model= 'adm_seccion';
 

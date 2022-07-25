@@ -349,7 +349,7 @@ class services{
      * @param string $name_model Nombre del modelo a obtener datos
      * @return array|stdClass
      */
-    public function data_conexion_local(string $name_model): array|stdClass
+    private function data_conexion_local(string $name_model): array|stdClass
     {
         $db = new database();
 
@@ -819,7 +819,7 @@ class services{
         return $valida;
     }
 
-    public function valida_estructuras_remotas(stdClass $data_local, array $servers_in_data, string $tabla): bool|array
+    private function valida_estructuras_remotas(stdClass $data_local, array $servers_in_data, string $tabla): bool|array
     {
         foreach ($servers_in_data as $database){
 
@@ -830,6 +830,25 @@ class services{
 
         }
         return true;
+    }
+
+    public function valida_init_services(stdClass|database $db, string $tabla): bool|array
+    {
+        $data_local = $this->data_conexion_local(name_model: $tabla);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener datos de conexion local',data:  $data_local);
+        }
+
+        if(!isset($db->servers_in_data)){
+            return $this->error->error(mensaje: 'Error no existe database->servers_in_data',data:  $db);
+        }
+
+        $valida = $this->valida_estructuras_remotas(data_local: $data_local, servers_in_data: $db->servers_in_data,
+            tabla:  $tabla);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error comparar datos ', data: $valida);
+        }
+        return $valida;
     }
 
     /**
