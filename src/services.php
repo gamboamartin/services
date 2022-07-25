@@ -702,6 +702,10 @@ class services{
      * Valida la conexion de una base de datos junto con la existencia del modelo
      * @param stdClass|database $conf_database Configuracion de conexion a la base de datos
      * @param string $name_model Nombre del modelo a verificar
+     * @version 0.33.6
+     * @verfuncion 0.1.0
+     * @author mgamboa
+     * @fecha 2022-07-22 15:44
      * @return bool|array
      */
     private function valida_conexion_modelo(stdClass|database $conf_database, string $name_model): bool|array
