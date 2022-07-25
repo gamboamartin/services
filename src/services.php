@@ -42,7 +42,7 @@ class services{
     /**
      * @throws JsonException
      */
-    public function alta_row(modelo $modelo, array $registro): bool|array
+    private function alta_row(modelo $modelo, array $registro): bool|array
     {
         $insertado = false;
         $existe_remoto = $modelo->existe_by_id(registro_id: $registro['id']);
@@ -569,6 +569,27 @@ class services{
             return (new errores())->error(mensaje: 'Error al insertar registro', data: $r_alta);
         }
         return $r_alta;
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function inserta_rows(int $insersiones, modelo $modelo_remoto, array $registros): bool|array
+    {
+        foreach ($registros as $registro){
+
+            $insertado = $this->alta_row(modelo: $modelo_remoto, registro: $registro);
+            if(errores::$error){
+                return (new errores())->error(mensaje: 'Error al insertar registro', data: $insertado);
+            }
+            if($insertado){
+                $insersiones++;
+            }
+            if($insersiones>=10){
+                break;
+            }
+        }
+        return true;
     }
 
     /**
