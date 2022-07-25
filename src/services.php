@@ -804,7 +804,7 @@ class services{
         return true;
     }
 
-    public function valida_estructura(stdClass $data_local, stdClass $database, string $tabla): bool|array
+    private function valida_estructura(stdClass $data_local, stdClass $database, string $tabla): bool|array
     {
         $data_remoto = $this->data_conexion_remota(conf_database: $database, name_model: $tabla);
         if(errores::$error){
@@ -817,6 +817,19 @@ class services{
             return $this->error->error(mensaje: 'Error comparar datos ', data: $valida);
         }
         return $valida;
+    }
+
+    public function valida_estructuras_remotas(stdClass $data_local, array $servers_in_data, string $tabla): bool|array
+    {
+        foreach ($servers_in_data as $database){
+
+            $valida = $this->valida_estructura(data_local: $data_local, database: $database, tabla: $tabla);
+            if(errores::$error){
+                return $this->error->error(mensaje: 'Error comparar datos ', data: $valida);
+            }
+
+        }
+        return true;
     }
 
     /**
