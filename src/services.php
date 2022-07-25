@@ -933,6 +933,11 @@ class services{
         return $val;
     }
 
+    /**
+     * @param stdClass $data_local Datos de conexion local
+     * @param stdClass $data_remoto Datos de conexion remota
+     * @return bool|array
+     */
     private function verifica_numero_columnas(stdClass $data_local, stdClass $data_remoto): bool|array
     {
         if($data_remoto->n_columnas > $data_local->n_columnas){
