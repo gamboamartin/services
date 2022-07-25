@@ -42,6 +42,29 @@ class services{
     /**
      * @throws JsonException
      */
+    public function alta_por_host(stdClass $database, array $registros, string $tabla): bool|array
+    {
+        $data_remoto = $this->data_conexion_remota(conf_database: $database, name_model: $tabla);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener datos remotos',data:  $data_remoto);
+        }
+
+        $modelo_remoto = (new modelo_base(link: $data_remoto->link))->genera_modelo(modelo: $tabla);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar modelo',data:  $modelo_remoto);
+
+        }
+
+        $insersiones_data = $this->inserta_rows(modelo_remoto: $modelo_remoto,registros: $registros);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al insertar registro', data: $insersiones_data);
+        }
+        return $insersiones_data;
+    }
+
+    /**
+     * @throws JsonException
+     */
     private function alta_row(modelo $modelo, array $registro): bool|array
     {
         $insertado = false;
@@ -354,7 +377,7 @@ class services{
      * @fecha 2022-07-25 16:14
      * @return array|stdClass
      */
-    public function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
+    private function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
     {
         $valida = $this->valida_conexion_modelo(conf_database: $conf_database, name_model: $name_model);
         if(errores::$error){
@@ -395,7 +418,7 @@ class services{
      * @fecha 2022-07-25 16:01
      * @return array|stdClass
      */
-    public function data_full_model(stdClass|database $conf_database, string $name_model): array|stdClass
+    private function data_full_model(stdClass|database $conf_database, string $name_model): array|stdClass
     {
         $valida = $this->valida_data_conexion(conf_database:  $conf_database);
         if(errores::$error){
@@ -574,7 +597,7 @@ class services{
     /**
      * @throws JsonException
      */
-    public function inserta_rows( modelo $modelo_remoto, array $registros): bool|array
+    private function inserta_rows( modelo $modelo_remoto, array $registros): bool|array
     {
         $insersiones = 0;
         foreach ($registros as $registro){
