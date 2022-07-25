@@ -545,7 +545,7 @@ class services{
     /**
      * @throws JsonException
      */
-    private function inserta_row_limpio(modelo $modelo, array $registro): array
+    private function inserta_row_limpio(modelo $modelo, array $registro): array|stdClass
     {
         $registro = $this->limpia_row_alta(registro: $registro);
         if(errores::$error){
