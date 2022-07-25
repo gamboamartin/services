@@ -170,9 +170,6 @@ class services{
     }
 
 
-
-
-
     /**
      * TODO
      * Crea un link de mysql con mysqli
@@ -352,7 +349,7 @@ class services{
      * @param string $name_model
      * @return array|stdClass
      */
-    public function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
+    private function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
     {
         $valida = $this->valida_conexion_modelo(conf_database: $conf_database, name_model: $name_model);
         if(errores::$error){
@@ -743,6 +740,21 @@ class services{
         return true;
     }
 
+    public function valida_estructura(stdClass $data_local, stdClass $database, string $tabla): bool|array
+    {
+        $data_remoto = $this->data_conexion_remota(conf_database: $database, name_model: $tabla);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener datos remotos', data: $data_remoto);
+        }
+
+        $valida = $this->verifica_tabla_synk(data_local: $data_local,data_remoto:  $data_remoto, database: $database,
+            tabla:  $tabla);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error comparar datos ', data: $valida);
+        }
+        return $valida;
+    }
+
     /**
      *
      * Se verifica si el path esta vacio, o el archivo existe, el archivo no debe existir para retornar true
@@ -882,7 +894,7 @@ class services{
      * @param string $tabla
      * @return bool|array
      */
-    public function verifica_tabla_synk(stdClass $data_local,stdClass $data_remoto, stdClass|database $database, string $tabla): bool|array
+    private function verifica_tabla_synk(stdClass $data_local,stdClass $data_remoto, stdClass|database $database, string $tabla): bool|array
     {
         $existe_tabla = (new validaciones())->existe_tabla(link:  $data_remoto->link, name_bd: $database->db_name,tabla: $tabla);
         if(!$existe_tabla){
@@ -897,7 +909,7 @@ class services{
         $valida = $this->verifica_columnas(columnas_local: $data_local->columnas,
             columnas_remotas:  $data_remoto->columnas);
         if(errores::$error){
-            return (new errores())->error('Error comparar datos '.$tabla, $valida);
+            return (new errores())->error(mensaje: 'Error comparar datos '.$tabla, data: $valida);
         }
 
         return true;
