@@ -380,6 +380,12 @@ class services{
         return $data;
     }
 
+    /**
+     * Genera y obtiene los datos de una conexion y un modelo a sincroniozar
+     * @param stdClass|database $conf_database Configuracion de la base de datos
+     * @param string $name_model Nombre del modelo a ejecutar la sincronizacion
+     * @return array|stdClass
+     */
     private function data_full_model(stdClass|database $conf_database, string $name_model): array|stdClass
     {
         $valida = $this->valida_data_conexion(conf_database:  $conf_database);
