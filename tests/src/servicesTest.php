@@ -229,6 +229,31 @@ class servicesTest extends test {
         errores::$error = false;
     }
 
+    public function test_data_full_model(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        //$srv = new liberator($srv);
+
+
+        $conf_database= new stdClass();
+        $conf_database->db_host = 'localhost';
+        $conf_database->db_name = 'a';
+        $conf_database->db_user = 'a';
+        $conf_database->db_password = 'a';
+        $conf_database->set_name = 'a';
+        $conf_database->sql_mode = '';
+        $conf_database->time_out = 'a';
+        $name_model = 'x';
+        $resultado = $srv->data_full_model($conf_database, $name_model);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        errores::$error = false;
+    }
+
     public function test_genera_files(): void
     {
         errores::$error = false;

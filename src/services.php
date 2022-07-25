@@ -384,6 +384,10 @@ class services{
      * Genera y obtiene los datos de una conexion y un modelo a sincroniozar
      * @param stdClass|database $conf_database Configuracion de la base de datos
      * @param string $name_model Nombre del modelo a ejecutar la sincronizacion
+     * @version 0.36.6
+     * @verfuncion 0.1.0
+     * @author mgamboa
+     * @fecha 2022-07-25 16:01
      * @return array|stdClass
      */
     private function data_full_model(stdClass|database $conf_database, string $name_model): array|stdClass
