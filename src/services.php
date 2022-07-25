@@ -345,8 +345,13 @@ class services{
     }
 
     /**
+     * Genera los datos de una conexion remota
      * @param stdClass $conf_database Configuracion de conexion a la base de datos
-     * @param string $name_model
+     * @param string $name_model Nombre del modelo
+     * @version 0.37.6
+     * @verfuncion 0.1.0
+     * @author mgamboa
+     * @fecha 2022-07-25 16:14
      * @return array|stdClass
      */
     public function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
@@ -390,7 +395,7 @@ class services{
      * @fecha 2022-07-25 16:01
      * @return array|stdClass
      */
-    private function data_full_model(stdClass|database $conf_database, string $name_model): array|stdClass
+    public function data_full_model(stdClass|database $conf_database, string $name_model): array|stdClass
     {
         $valida = $this->valida_data_conexion(conf_database:  $conf_database);
         if(errores::$error){

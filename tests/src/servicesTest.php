@@ -229,7 +229,7 @@ class servicesTest extends test {
         errores::$error = false;
     }
 
-    public function test_data_full_model(): void
+    public function test_data_conexion_remota(): void
     {
         errores::$error = false;
 
@@ -237,6 +237,24 @@ class servicesTest extends test {
         $srv->finaliza_servicio();
 
         //$srv = new liberator($srv);
+
+        $name_model= 'adm_seccion';
+        $conf_database = new stdClass();
+        $conf_database->db_host = 'localhost';
+        $resultado = $srv->data_conexion_remota($conf_database, $name_model);
+        $this->assertIsArray( $resultado);
+        $this->assertTrue(errores::$error);
+        errores::$error = false;
+    }
+
+    public function test_data_full_model(): void
+    {
+        errores::$error = false;
+
+        $srv = new services(__FILE__);
+        $srv->finaliza_servicio();
+
+        $srv = new liberator($srv);
 
 
         $conf_database= new stdClass();
