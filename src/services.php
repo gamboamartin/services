@@ -349,7 +349,7 @@ class services{
      * @param string $name_model
      * @return array|stdClass
      */
-    private function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
+    public function data_conexion_remota(stdClass $conf_database, string $name_model): array|stdClass
     {
         $valida = $this->valida_conexion_modelo(conf_database: $conf_database, name_model: $name_model);
         if(errores::$error){
