@@ -574,8 +574,9 @@ class services{
     /**
      * @throws JsonException
      */
-    public function inserta_rows(int $insersiones, modelo $modelo_remoto, array $registros): bool|array
+    public function inserta_rows( modelo $modelo_remoto, array $registros): bool|array
     {
+        $insersiones = 0;
         foreach ($registros as $registro){
 
             $insertado = $this->alta_row(modelo: $modelo_remoto, registro: $registro);
