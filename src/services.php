@@ -349,7 +349,7 @@ class services{
      * @param string $name_model Nombre del modelo a obtener datos
      * @return array|stdClass
      */
-    private function data_conexion_local(string $name_model): array|stdClass
+    public function data_conexion_local(string $name_model): array|stdClass
     {
         $db = new database();
 
