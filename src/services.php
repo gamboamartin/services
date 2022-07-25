@@ -832,12 +832,8 @@ class services{
         return true;
     }
 
-    public function valida_init_services(stdClass|database $db, string $tabla): bool|array
+    public function valida_init_services(stdClass $data_local, stdClass|database $db, string $tabla): bool|array
     {
-        $data_local = $this->data_conexion_local(name_model: $tabla);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al obtener datos de conexion local',data:  $data_local);
-        }
 
         if(!isset($db->servers_in_data)){
             return $this->error->error(mensaje: 'Error no existe database->servers_in_data',data:  $db);
@@ -992,7 +988,8 @@ class services{
      */
     private function verifica_tabla_synk(stdClass $data_local,stdClass $data_remoto, stdClass|database $database, string $tabla): bool|array
     {
-        $existe_tabla = (new validaciones())->existe_tabla(link:  $data_remoto->link, name_bd: $database->db_name,tabla: $tabla);
+        $existe_tabla = (new validaciones())->existe_tabla(link:  $data_remoto->link, name_bd: $database->db_name,
+            tabla: $tabla);
         if(!$existe_tabla){
             return  (new errores())->error(mensaje: 'Error no existe la tabla',data:  $tabla);
         }
