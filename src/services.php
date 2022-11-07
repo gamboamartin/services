@@ -345,11 +345,12 @@ class services{
 
     /**
      * Obtiene los datos de una conexion local link, modelo, columnas, n_columnas
-     * @version 0.5.0
      * @param string $name_model Nombre del modelo a obtener datos
+     * @param string $namespace_model
      * @return array|stdClass
+     * @version 0.5.0
      */
-    public function data_conexion_local(string $name_model): array|stdClass
+    public function data_conexion_local(string $name_model, string $namespace_model): array|stdClass
     {
         $db = new database();
 
@@ -358,7 +359,7 @@ class services{
             return $this->error->error(mensaje: 'Error al validar conf',data:  $valida);
         }
 
-        $data = $this->data_full_model(conf_database: $db, name_model: $name_model);
+        $data = $this->data_full_model(conf_database: $db, name_model: $name_model, namespace_model: $namespace_model);
         if(errores::$error){
             return (new errores())->error(mensaje: 'Error al obtener datos de conexion', data: $data);
 
@@ -412,13 +413,15 @@ class services{
      * Genera y obtiene los datos de una conexion y un modelo a sincroniozar
      * @param stdClass|database $conf_database Configuracion de la base de datos
      * @param string $name_model Nombre del modelo a ejecutar la sincronizacion
+     * @param string $namespace_model
+     * @return array|stdClass
      * @version 0.36.6
      * @verfuncion 0.1.0
      * @author mgamboa
      * @fecha 2022-07-25 16:01
-     * @return array|stdClass
      */
-    private function data_full_model(stdClass|database $conf_database, string $name_model): array|stdClass
+    private function data_full_model(
+        stdClass|database $conf_database, string $name_model, string $namespace_model): array|stdClass
     {
         $valida = $this->valida_data_conexion(conf_database:  $conf_database);
         if(errores::$error){
@@ -435,7 +438,7 @@ class services{
             return (new errores())->error(mensaje: 'Error al conectar a base de datos',data:  $link);
         }
 
-        $modelo = (new modelo_base(link: $link))->genera_modelo(modelo: $name_model);
+        $modelo = (new modelo_base(link: $link))->genera_modelo(modelo: $name_model, namespace_model: $namespace_model);
         if(errores::$error){
             return (new errores())->error(mensaje: 'Error al generar modelo',data:  $modelo);
         }
