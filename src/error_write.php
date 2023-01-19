@@ -4,7 +4,7 @@ namespace gamboamartin\services\error_write;
 
 use JetBrains\PhpStorm\NoReturn;
 
-class error_write{
+final class error_write{
 
     /**
      * Salida de error de servicio escribe eñ documento con el trazado de los errores

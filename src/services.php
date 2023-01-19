@@ -42,7 +42,7 @@ class services{
     /**
      * @throws JsonException
      */
-    public function alta_por_host(stdClass $database, array $registros, string $tabla): bool|array
+    final public function alta_por_host(stdClass $database, array $registros, string $tabla): bool|array
     {
         $data_remoto = $this->data_conexion_remota(conf_database: $database, name_model: $tabla);
         if(errores::$error){
@@ -962,7 +962,7 @@ class services{
      * @param string $path Ruta de servicio en ejecucion
      * @return stdClass|array
      */
-    public function verifica_servicio(string $path): stdClass|array
+    final public function verifica_servicio(string $path): stdClass|array
     {
         $path = trim($path);
         if($path === ''){
