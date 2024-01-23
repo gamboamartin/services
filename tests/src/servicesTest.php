@@ -78,7 +78,6 @@ class servicesTest extends test {
         errores::$error = false;
     }
 
-
     public function test_conecta_mysqli(): void
     {
         errores::$error = false;
@@ -172,8 +171,6 @@ class servicesTest extends test {
             unlink('2');
         }
     }
-
-
 
     public function test_data_conecta(): void
     {

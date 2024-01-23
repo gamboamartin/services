@@ -27,13 +27,14 @@ final class error_write{
      * @param array $error Error resultante de la clase errores
      * @param string $info Infomacion a escribir del error previo
      * @param string $path_info Ruta del archivo info del servicio generado en el constructor de services
-     * @return void
+
      */
-    private function write(array $error, string $info, string $path_info): void
+    private function write(array $error, string $info, string $path_info): bool|string
     {
         $data = print_r($error,true);
         $info .= file_get_contents($path_info).$data;
         file_put_contents($path_info,$info);
+        return $data;
     }
 }
 
