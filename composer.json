@@ -26,8 +26,8 @@
         "gamboa.martin/base_modelos": "^3.0.0",
         "gamboa.martin/compresor": "^4.0.0",
         "gamboa.martin/configuraciones": "^1.0.0",
-        "gamboa.martin/plugins": "^3.0.0",
-        "gamboa.martin/administrador": "^15.0.0",
+        "gamboa.martin/plugins": "^4.0.0",
+        "gamboa.martin/administrador": "^16.0.0",
         "ext-mysqli": "*",
         "ext-pdo": "*"
     },
