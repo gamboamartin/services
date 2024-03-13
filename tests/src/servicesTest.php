@@ -11,9 +11,9 @@ use stdClass;
 class servicesTest extends test {
     public errores $errores;
     private string $tipo_conexion = 'MYSQLI';
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    public function __construct(?string $name = null)
     {
-        parent::__construct(name: $name, data: $data, dataName: $dataName, tipo_conexion: $this->tipo_conexion);
+        parent::__construct(name: $name);
         $this->errores = new errores();
     }
 
