@@ -29,12 +29,11 @@ final class error_write{
      * @param string $path_info Ruta del archivo info del servicio generado en el constructor de services
 
      */
-    private function write(array $error, string $info, string $path_info): bool|string
+    private function write(array $error, string $info, string $path_info): void
     {
         $data = print_r($error,true);
         $info .= file_get_contents($path_info).$data;
         file_put_contents($path_info,$info);
-        return $data;
     }
 }
 
